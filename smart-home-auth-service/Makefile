@@ -4,7 +4,7 @@ HOST ?= 0.0.0.0
 PORT ?= 8001
 
 run:
-	poetry run uvicorn main:app --host $(HOST) --port $(PORT)
+	poetry run uvicorn main:app --host $(HOST) --port $(PORT) --reload
 
 install:
 	@echo "Подтягиваем зависимость $(LIBRARY)"
