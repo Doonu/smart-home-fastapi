@@ -1,13 +1,13 @@
 import asyncio
 from logging.config import fileConfig
 
-from config.test_models import Base
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
-from config.settings import app_settings
 
+from config import Base
+from config.settings import app_settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -29,9 +29,9 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-config.set_main_option(
-    "sqlalchemy.url", "postgresql+asyncpg://postgres:qwerty@localhost:5432/"
-)
+
+
+config.set_main_option("sqlalchemy.url", app_settings.db_url)
 
 
 def run_migrations_offline() -> None:

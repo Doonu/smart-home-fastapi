@@ -1,7 +1,7 @@
 /.idea./
 .venv
 
-auth_service_env
-/auth_service_env/
+.env
+/.env/
 
 /.idea/
