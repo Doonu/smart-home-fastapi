@@ -2,4 +2,8 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    TOKEN: str = "TOKEN"
+    DATABASE_URL: str = ""
+    ECHO: bool = False
+
+
+app_settings = Settings()

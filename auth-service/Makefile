@@ -13,3 +13,10 @@ install:
 uninstall:
 	@echo "Удаляем зависимость $(LIBRARY)"
 	poetry remove $(LIBRARY)
+
+migrate-create:
+	alembic revision --autogenerate -m $(MESSAGE)
+
+migrate-apply:
+	alembic upgrade head
+
