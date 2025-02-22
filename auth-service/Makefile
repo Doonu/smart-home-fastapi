@@ -1,10 +1,10 @@
 .DEFAULT_GOAL := help
 
-HOST ?= 0.0.0.0
+HOST ?= localhost
 PORT ?= 8000
 
 run:
-	poetry run uvicorn main:app --host $(HOST) --port $(PORT) --reload
+	poetry run uvicorn main:app --host $(HOST) --port $(PORT) --reload --env-file .local.env
 
 install:
 	@echo "Подтягиваем зависимость $(LIBRARY)"
