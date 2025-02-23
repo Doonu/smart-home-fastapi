@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = ""
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:qwerty@localhost:5432/"
     DB_HOST: str = "localhost"
     DB_PORT: str = "5432"
     DB_USER: str = "postgres"

@@ -6,8 +6,13 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
+from api_v1.user import User
+from api_v1.profile import Profile
+from api_v1.auth import Session
+
 from config import Base
 from config.settings import app_settings
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
