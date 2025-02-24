@@ -8,7 +8,7 @@ from alembic import context
 
 from api_v1.user import User
 from api_v1.profile import Profile
-from api_v1.auth import Session
+from api_v1.session import Session
 
 from config import Base
 from config.settings import app_settings
