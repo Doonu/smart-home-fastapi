@@ -1,6 +1,5 @@
-from sqlalchemy import String, Integer, CheckConstraint
-from sqlalchemy.orm import Mapped, relationship
-from sqlalchemy.testing.schema import mapped_column
+from sqlalchemy import String, Integer, CheckConstraint, ForeignKey
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 from typing import TYPE_CHECKING
 
 from config import Base
@@ -18,4 +17,7 @@ class Profile(Base):
         Integer, CheckConstraint("gender IN (1, 2)"), nullable=True
     )
 
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("user.id"), unique=True, nullable=False
+    )
     user: Mapped["User"] = relationship(back_populates="profile")
