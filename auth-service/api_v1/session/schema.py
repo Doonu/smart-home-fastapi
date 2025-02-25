@@ -16,7 +16,7 @@ class SessionCreate(BaseModel):
 
 
 class SessionUpdate(BaseModel):
-    session_id: str
+    session_id: int
     access_token: Optional[str] = None
     refresh_token: Optional[str] = None
     device_id: Optional[str] = None

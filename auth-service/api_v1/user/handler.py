@@ -15,3 +15,11 @@ async def create_user(
     user_service: Annotated[UserService, Depends(get_user_service)],
 ):
     return await user_service.create_user(email=body.email, password=body.password)
+
+
+@router.get("")
+async def get_user(
+    user_id: int,
+    user_service: Annotated[UserService, Depends(get_user_service)],
+):
+    return await user_service.get_user(user_id=user_id)

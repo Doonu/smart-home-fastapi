@@ -17,7 +17,7 @@ from .schema import (
 class SessionRepository:
     db_session: AsyncSession
 
-    async def get_session_by_id(self, session_id: str) -> Optional[SessionResponse]:
+    async def get_session_by_id(self, session_id: int) -> Optional[SessionResponse]:
         query = select(Session).where(Session.id == session_id)
 
         session = await self.db_session.execute(query)
