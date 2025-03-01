@@ -1,6 +1,6 @@
 from datetime import timedelta, datetime
 from typing import Optional
-
+from fastapi import status, HTTPException
 import bcrypt
 import jwt
 
@@ -21,7 +21,7 @@ async def hash_password(password_user: str) -> bytes:
 async def create_access_token(user_id: int) -> str:
     jwt_payload = {
         "user_id": user_id,
-        "sub": user_id,
+        "sub": "sub",
     }
 
     token_req = CreateToken(
@@ -34,7 +34,7 @@ async def create_access_token(user_id: int) -> str:
 
 
 async def create_refresh_token(user_id: int) -> str:
-    jwt_payload = {"user_id": user_id, "sub": user_id}
+    jwt_payload = {"user_id": user_id, "sub": "sub"}
 
     token_req = CreateToken(
         token_data=jwt_payload,
@@ -51,6 +51,12 @@ async def create_token(token_req: CreateToken) -> str:
 
     return await encode_jwt(
         payload=jwt_payload, expire_minutes=token_req.expire_minutes
+    )
+
+
+async def validate_password(password_user: str, hashed_password: bytes) -> bool:
+    return bcrypt.checkpw(
+        password=password_user.encode(), hashed_password=hashed_password
     )
 
 
@@ -72,3 +78,33 @@ async def encode_jwt(
     to_encode.update(exp=expire, iat=now)
     encoded = jwt.encode(payload=to_encode, key=private_key, algorithm=algorithm)
     return encoded
+
+
+async def decode_jwt(
+    token: str,
+    public_key=app_settings.auth.public_key_path.read_text(),
+    algorithm: str = app_settings.auth.algorithm,
+):
+    try:
+        decoded = jwt.decode(jwt=token, key=public_key, algorithms=[algorithm])
+        return decoded
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Токен просрочен"
+        )
+    except jwt.InvalidKeyError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Токен невалидный"
+        )
+
+
+async def validate_token_type(payload: dict, token_type: str) -> bool:
+    current_token_type = payload.get(TOKEN_TYPE_FIELD)
+
+    if current_token_type == token_type:
+        return True
+
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail=f"Инвалидный токен {current_token_type!r} {token_type!r}",
+    )

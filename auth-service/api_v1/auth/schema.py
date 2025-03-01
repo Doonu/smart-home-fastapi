@@ -8,6 +8,12 @@ class RegistrationRequest(BaseModel):
     device_id: str
 
 
+class LoginRequest(BaseModel):
+    email: EmailStr = Form()
+    password: str = Form()
+    device_id: str
+
+
 class AuthResponse(BaseModel):
     user_id: int
     access_token: str

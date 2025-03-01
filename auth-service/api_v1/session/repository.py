@@ -31,22 +31,28 @@ class SessionRepository:
         session = await self.db_session.execute(query)
         return session.scalar()
 
+    async def get_session_by_refresh_token(
+        self, refresh_token: str
+    ) -> Optional[SessionResponse]:
+        query = select(Session).where(Session.refresh_token == refresh_token)
+
+        session = await self.db_session.execute(query)
+        return session.scalar()
+
     async def create_session(self, session: SessionCreate) -> int:
         session = Session(**session.model_dump())
         self.db_session.add(session)
-        print(session.__dict__)
         await self.db_session.commit()
         return session.id
 
-    async def update_session(self, session: SessionUpdate) -> Optional[SessionResponse]:
+    async def update_session(self, session: SessionUpdate):
         current_session = await self.get_session_by_id(session.session_id)
-        update_session = current_session.model_dump(exclude_unset=True).items()
+        update_session = session.model_dump(exclude_unset=True).items()
 
         for name, value in update_session:
             setattr(current_session, name, value)
 
-        await session.commit()
-        return current_session
+        await self.db_session.commit()
 
     async def delete_session(self, session: SessionDelete):
         await self.db_session.delete(session)
