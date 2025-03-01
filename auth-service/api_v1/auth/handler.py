@@ -39,6 +39,9 @@ async def refresh(
     return await auth_service.refresh(credentials=credentials)
 
 
-@router.post("/logout")
-async def logout():
-    pass
+@router.post("/logout", dependencies=[Depends(http_bearer)])
+async def logout(
+    auth_service: Annotated[AuthService, Depends(get_auth_service)],
+    credentials: HTTPAuthorizationCredentials = Depends(http_bearer),
+):
+    return await auth_service.logout(credentials=credentials)

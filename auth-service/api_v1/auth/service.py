@@ -13,6 +13,7 @@ from api_v1.auth.utils import (
     decode_jwt,
     validate_token_type,
     REFRESH_TOKEN_TYPE,
+    ACCESS_TOKEN_TYPE,
 )
 from api_v1.profile.repository import ProfileRepository
 from api_v1.profile.schema import ProfileCreateRequest
@@ -129,3 +130,22 @@ class AuthService:
         return AuthResponse(
             access_token=access_token, refresh_token=refresh_token, user_id=user_id
         )
+
+    async def logout(self, credentials: HTTPAuthorizationCredentials):
+        if credentials is None:
+            raise HTTPException(status_code=401, detail="Токен отсутствует")
+
+        access_token = credentials.credentials
+        payload = await decode_jwt(token=access_token)
+        await validate_token_type(token_type=ACCESS_TOKEN_TYPE, payload=payload)
+
+        session = await self.session_repository.get_session_by_access_token(
+            access_token=access_token
+        )
+
+        if session is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Сессия не найдена"
+            )
+
+        await self.session_repository.delete_session(session=session)

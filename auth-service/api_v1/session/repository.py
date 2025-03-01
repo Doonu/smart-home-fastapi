@@ -9,7 +9,6 @@ from .schema import (
     SessionResponse,
     SessionUpdate,
     SessionCreate,
-    SessionDelete,
 )
 
 
@@ -54,7 +53,6 @@ class SessionRepository:
 
         await self.db_session.commit()
 
-    async def delete_session(self, session: SessionDelete):
+    async def delete_session(self, session: SessionResponse):
         await self.db_session.delete(session)
         await self.db_session.commit()
-        return {"message": "Сессия удалена"}
