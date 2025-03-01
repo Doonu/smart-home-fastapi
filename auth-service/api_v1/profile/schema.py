@@ -8,7 +8,7 @@ class ProfileBase(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     age: Optional[int] = None
-    gender: Optional[str] = Field(
+    gender: Optional[int] = Field(
         None, description="Пол: 1 - мужской, 2 - женский", ge=1, le=2
     )
 

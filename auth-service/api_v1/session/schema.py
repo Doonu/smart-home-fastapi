@@ -13,6 +13,7 @@ class SessionCreate(BaseModel):
     access_token: str
     refresh_token: str
     device_id: str
+    user_id: int
 
 
 class SessionUpdate(BaseModel):

@@ -1,4 +1,17 @@
+from pathlib import Path
+
 from pydantic_settings import BaseSettings
+from pydantic import BaseModel
+
+BaseDir = Path(__file__).parent.parent
+
+
+class AuthJWT(BaseModel):
+    private_key_path: Path = BaseDir / "certs" / "jwt-private.pem"
+    public_key_path: Path = BaseDir / "certs" / "jwt-public.pem"
+    algorithm: str = "RS256"
+    access_token_expire_minutes: int = 15
+    refresh_token_expire_days: int = 30
 
 
 class Settings(BaseSettings):
@@ -10,6 +23,8 @@ class Settings(BaseSettings):
     DB_DRIVER: str = "postgresql+asyncpg"
     DB_NAME: str = ""
     ECHO: bool = False
+
+    auth: AuthJWT = AuthJWT()
 
     @property
     def db_url(self) -> str:
